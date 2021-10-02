@@ -1,0 +1,172 @@
+---
+title: "Clase 03 Introducción Variables Aleatorias"
+author: Dr. José A. Gallardo y Dra. María Angélica Rueda.  <jose.gallardo@pucv.cl>  |  Pontificia
+  Universidad Católica de Valparaíso
+date: "`r format(Sys.time(), '%d %B %Y')`"
+output:
+  beamer_presentation:
+subtitle: 'Diplomado en Análisis de datos con R para la Acuicultura'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(MASS)
+library(psych)
+library("knitr")
+library(Rlab)
+```
+
+## **PLAN DE LA CLASE**
+
+**1.- Introducción**
+
+- Clasificación de variables aleatorias.
+- Observar y predecir una variable cuantitativa continua.
+- Observar y predecir una variable cuantitativa discreta.
+- Observar y predecir variables binarias.
+
+**2.- Práctica con R y Rstudio cloud**
+
+- Observa y predice una variable aleatoria continua con distribución Normal.
+
+- Observa y predice variables aleatorias discretas con distribución Bernoulli o Binomial.
+
+- Elabora un reporte dinámico en formato pdf.
+
+## **TIPOS DE VARIABLES ALEATORIAS**
+
+```{r, echo=FALSE, out.width = '80%', fig.align='center'}
+knitr::include_graphics("TiposVariables.jpg")
+```
+
+## **VARIABLE ALEATORIA CUANTITATIVA CONTINUA**
+
+**Definición:** Puede tomar cualquier valor dentro de un intervalo (a,b), (a,Inf), (-Inf,b),(-Inf,Inf) y la probabilidad que toma cualquier punto es 0, debido a que existe un número infinito de posibilidades.
+
+```{r, echo=FALSE, out.width = '70%', fig.align='center'}
+knitr::include_graphics("FxNormal.jpg")
+```
+
+## **OBSERVAR UNA VARIABLE CUANTITATIVA CONTINUA**
+
+Al observar con un histograma **hist()** notamos que: 
+
+1. La frecuencia o probabilidad en un intervalo es distinta de cero.  
+2. Cuando aumenta el **n** muestral se perfila una distribución llamada **normal**.    
+
+```{r, echo=FALSE, out.width = '70%', fig.align='center'}
+par(mfrow=c(1,2))
+set.seed(123)
+q<-rnorm(50, 0, 1)
+hist(q, col="red", main = "Histograma n= 50", xlab = "Variable cuantitativa continua")
+q1<-rnorm(10000, 0, 1)
+hist(q1, col="red", main = "Histograma n= 10000", xlab = "Variable cuantitativa continua")
+```
+
+## **PREDECIR UNA VARIABLE CUANTITATIVA CONTINUA**
+
+Podemos predecir la probabilidad de que la variable aleatoria tome un determinado valor usando la función de densidad empírica **density()**.
+
+```{r , echo=FALSE, out.width = '80%', fig.align='center'}
+
+q2<-rnorm(100000, 0, 1)
+plot(density(q2), main = "Función de densidad empírica")
+
+```
+
+## **PREDECIR VARIABLES CONTINUAS 2**
+
+Podemos predecir la probabilidad de que la variable aleatoria tome un valor menor o igual a un determinado valor, usando la función de distribución empírica acumulada **ecdf()**.
+
+```{r}
+ 
+plot(ecdf(q2),main= "Función de distribución empírica acumulada", col="red")
+```
+
+## **OBSERVAR CON BOXPLOT**
+
+Las gráficas de cajas y bigotes (**boxplot()**) son muy adecuadas para observar variables aleatorias continuas.
+
+[^1]: **IQR =** **_Rango intercuantílico_** es la diferencia entre el tercer cuartil (75%) y el primer cuartil (25%) de una distribución.
+
+```{r, echo=FALSE, out.width = '80%', fig.align='center'}
+
+knitr::include_graphics("Boxplot.png")
+```
+
+## **VARIABLES ALEATORIAS DISCRETAS**
+
+Las variables aleatorias discretas son aquellas que presentan un número contable de valores; por ejemplo:
+
+* **Número de salmones que están en un estanque** (10, 50, 70, etc.).
+
+* **Número de parásitos presentes en tilapias** (1, 3, 5, 6, etc.).
+
+* **Número de días a la muerte durante el desafío** (1, 2, 3,..., 40).
+
+## **IMPORTANCIA DE IDENTIFICAR Y ANALIZAR VARIABLES ALEATORIAS DISCRETAS**
+
+* En gran parte, la **_distribución de variables aleatorias discretas_** puede ser **asimétrica a derecha o a izquierda**.
+
+* Cuando las variables en estudio son conteos, proporciones o variables binarias (0 y 1); deben ser tratadas como **variables aleatorias discretas**. 
+
+* Según sea la variable aleatoria discreta, tendrá una función de distribución de probabilidad asociada **(Bernoulli, Binomial, Binomial Negativa, Poisson, entre otras)**. 
+
+* Es importante identificar la naturaleza que tiene nuestra variable en estudio, y así evitar errores en los análisis estadísticos que llevemos a cabo. 
+
+## **CASOS ESPECIALES**
+
+**1.- Variable aleatoria binaria:** Posee dos resultados posibles; por ejemplo, éxito o fracaso, macho o hembra, sano o enfermo, (0,1).
+
+**2.- Variable aleatoria dependiente del tiempo:** 
+
+**a) Discreta:** Días a la muerte de un organismo o fallo de un componente en un sistema en un tiempo *t*.  
+  
+**b) Continua:** Señales de sensores ambientales o señales biométricos.
+  
+Algunas de estas variables se conocen como **series de tiempo** y en términos estrictos son más bien una *sucesión de variables aleatorias* a través del tiempo.
+
+## **EJEMPLO VARIABLE ALEATORIA CON DISTRIBUCIÓN BERNOULLI**
+
+Se saca un camarón al azar de una piscina, la probabilidad de que tenga sindrome de la mancha blanca es de 0.35. Sea X=1 si el camarón tiene sindrome de la mancha blanca y X=0 en el caso de que no tenga sindrome de la mancha blanca. ¿Cuál es la distribución de X?
+
+|             | Fracaso | Éxito |
+|-------------|---------|-------|
+| x           | 0       | 1     |
+| f(x)=P(X=x) | 1-p     | p     |
+|             | 0.65    | 0.35  |
+
+```{r, echo=FALSE, out.width = '70%', fig.align='center'}
+
+knitr::include_graphics("fbernoulli.png")
+```
+
+## **EJEMPLO VARIABLE ALEATORIA CON DISTRIBUCIÓN BINOMIAL**
+
+```{r, echo=FALSE, out.width = '80%', fig.align='center', fig.cap="Némero de parçasitos por pez"}
+knitr::include_graphics("Binomial_salm.png")
+```
+
+## **COMO IMPORTAR TUS DATOS A R**
+
+## **FORMATO CORRECTO DE DATOS EXCEL ANTES DE IMPORTAR**
+
+## **ERRORES EN EL FORMATO EXCEL**
+
+## **PRÁCTICA ANÁLISIS DE DATOS**
+
+1.- Guía de trabajo Rmarkdown disponible en drive.  
+**Clase 03-Introducción variables aleatorias**
+
+2.- La tarea se realiza en Rstudio.cloud, proyecto (**Clase 03-Introducción variables aleatorias**).
+
+## **RESUMEN DE LA CLASE**
+
+- Identificamos  y clasificamos variables aleatorias.
+
+- Observamos una variable cuantitativa continua usando histogramas y boxplot.
+
+- Predecimos el comportamiento de una variable cuantitativa continua usando funciones de densidad y de distribución acumulada.
+
+- Estudiamos sobre variables aleatorias discretas y algunas distribuciones de probabilidad asociadas (Bernoulli o Binomial).
+

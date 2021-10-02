@@ -1,0 +1,114 @@
+---
+title: "Diplomado en Análisis de datos con R para la Acuicultura"
+subtitle: 'Presentación Diplomado'
+author: Dr. José Gallardo Matus y Dra. María Angélica Rueda.  Pontificia Universidad Católica de Valparaíso   
+date: "`r format(Sys.time(), '%d %B %Y')`"
+output: 
+  beamer_presentation:
+        includes:
+            in_header: mystyle.tex
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+# PLAN DE LA CLASE
+
+- Palabras de Bienvenida.
+
+- Revisión del Programa del curso.
+
+- Revisión de recursos de comunicación y aprendizaje.
+
+- Lectura condiciones AEA abierta.
+
+- Presentación de los participantes.
+
+
+# PROFESORES
+
+**Dr. José Gallardo**  
+<jose.gallardo@pucv.cl>   
+Profesor adjunto PUCV  
+Biólogo marino  
+Doctor en Ciencias  
+
+**Dr. María Angélica Rueda**  
+<maria.rueda.c@pucv.cl>  
+Investigadora Postdoctoral PUCV   
+Licenciada en Matemáticas  
+Doctor en Ciencias Agropecuarias  
+
+# OBJETIVOS DEL DIPLOMADO
+
+- Desarrollar habilidades para llevar a cabo proyectos de análisis de datos e investigación reproducible en acuicultura usando el lenguaje de programación R.
+
+- Desarrollar competencias para el análisis exploratorio de datos, inferencia estadística, aplicación de modelos lineales y no lineales para el análisis de datos de acuicultura.
+
+# REQUISITOS
+
+- **TITULO**: Título profesional o licenciatura. 
+
+- **Programación básica con R**: Deseable pero no es excluyente.   
+Los alumnos sin experiencia previa deben considerar 4 horas de estudio adicional por semana.  
+
+- **Inglés**: Los softwares R, Rstudio, Rmarkdown, GitHub y todas las librerías de análisis estadístico que se usarán en el curso solo están disponibles en inglés. Alumnos sin competencias de lectura en inglés no deberían tomar el curso.  
+
+# CONTENIDOS
+
+- **UNIDAD 1. Investigación reproducible y análisis exploratorio de datos.**  
+*Palabras clave: R, Rstudio, Rmarkdown, variables aleatorias, distribución de probabilidad, análisis exploratorio de datos.*  
+
+
+- **UNIDAD 2. Pruebas de contraste de hipótesis paramétricas y no paramétricas.**  
+*Palabras clave: Parámetro, estadístico, correlación, permutación, combinación, inferencia estadística, contraste de hipótesis y análisis de sobrevivencia.*
+
+- **UNIDAD 3. Modelos lineales y análisis multivariante. **  
+*Palabras clave: Regresión lineal, regresión lineal múltiple, regresión logística, análisis de cluster, análisis de componentes principales.*
+
+
+# PLAN DE EVALUACIONES Y CRITERIOS DE APROBACIÓN DEL DIPLOMADO
+
+| Tipo | Fecha | Unidad | Formato | Ponderación |
+|:---:|:---:|:---:|:---:|:---:|:---:|
+|  Sumativa  | 30-oct | 1 | Reporte AED | 40% |
+| Sumativa | 30-nov | 2 y 3 | Reporte AED  | 40% |
+|  Sumativa | 30-nov | 1, 2 Y 3 | Tareas | 20% |
+
+- **Asistencia a clases sincrónicas**: 80%.
+
+- **Nota mínima**: 4,0 en escala de 1-7.
+
+# RECURSOS DE APRENDIZAJE Y COMUNICACIÓN
+
+- **Repositorio**: Todo el material disponible en Google Drive.
+
+- **Comunicación**: Foro de preguntas por SLACK.
+
+- **Material docente**: Diapositivas de clases, videos, guías de aprendizaje y códigos de programación para el análisis de datos con R.
+
+- **Rstudio**: Acceso a Rstudio.cloud por 3 mes.
+
+# CONDICIONES DE OPERACIÓN
+
+- **Nombre de la actividad de extensión académica:**  
+DIPLOMADO EN ANÁLISIS DE DATOS CON R PARA LA ACUICULTURA.
+
+- **Resolución:**  
+230/2021.
+
+- **Fecha de ejecución:**  
+INICIO: 01/10/2021  
+TÉRMINO: 31/11/2021  
+
+- **Consultas, sugerencias y reclamos del curso:**
+<acuicultura@pucv.cl>  
+<oct@pucv.cl>  
+
+# PRESENTACIÓN DE LOS PARTICIPANTES
+
+```{r, echo=FALSE, out.width = '100%' }
+knitr::include_graphics("Welcome.png")
+```
+

@@ -1,0 +1,310 @@
+---
+title: "Clase 02 - Programación con Rmarkdown"
+subtitle: 'Diplomado en Análisis de datos con R para la Acuicultura'
+author: Dr. José Gallardo Matus. | Pontificia Universidad Católica de Valparaíso | <jose.gallardo@pucv.cl>    
+date: "`r format(Sys.time(), '%d %B %Y')`"
+output: 
+  beamer_presentation:
+        includes:
+            in_header: mystyle.tex
+---
+
+```{r setup, include=FALSE, comment=TRUE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## 
+<div class="centered">
+<div class="black">
+**PLAN DE CLASE**
+</div>
+</div>
+
+<div class="black">
+**1).** **Introducción**
+</div>
+
+- **Comunicar de forma efectiva**
+
+- **¿Qué es Rmarkdown y para que sirve?**
+
+- **¿Cómo funciona?**
+
+<div class="black">
+**2).** **Práctica con R y Rstudio cloud**
+</div>
+
+- **Escribir un código de programación con Rmarkdown.**
+
+- **Elaborar reportes dinámicos con Rmarkdown.**
+
+
+## 
+<div class="centered">
+<div class="black">
+
+**COMUNICAR RESULTADOS: PREGUNTAS AL CURSO**
+
+</div>
+</div>
+
+<div class="black">
+¿Por qué es importante presentar y comunicar resultados de tus análisis de datos?
+
+¿Cuál es el principal problema que has tenido al presentar y comunicar tus resultados de análisis de datos? 
+
+</div>
+
+## 
+<div class="centered">
+<div class="black">
+
+**COMUNICAR RESULTADOS: VISION**
+
+</div>
+</div>
+
+<div class="black">
+**80 % de la información que procesamos es visual**  
+
+```{r, echo=FALSE, out.width = '100%' }
+knitr::include_graphics("vision.png")
+```
+
+</div>
+
+## 
+<div class="centered">
+<div class="black">
+
+**COMUNICAR RESULTADOS DE FORMA EFECTIVA**
+
+</div>
+</div>
+
+<div class="black">
+**Cuando comuniques un resultado prefiere hacerlos con imagenes, figuras o esquemas**  
+
+```{r, echo=FALSE, out.width = '90%' }
+knitr::include_graphics("amonio.png")
+```
+
+</div>
+
+
+## 
+<div class="centered">
+<div class="black">
+
+**COMO NO HACERLO**
+
+</div>
+</div>
+
+<div class="black">
+**Lo que leemos una diapositiva tambien entrará por nuestra visión, pero luego será procesado en nuestro cerebro y se trasformará en imagenes por lo que no resulta del tofdo efectivo para comunicar una idea. Por lo tanto, hacer leer a tu audiencia será una forma poco eficiente de comunicar algo tan importante como los resultados de tus análisis, reportes o tesis. Para eso existen los reportes o informes escritos, donde tu audiencia podrá leer en profundidad la introducción, los métodos, los resultados y las conclusiones de tu trabajo. Por favor, evita copiar texto de los reportes para colocarlos en diapositivas.**
+</div>
+
+## 
+<div class="centered">
+<div class="black">
+
+**COMUNICAR RESULTADOS: MUESTRA PATRONES**
+
+</div>
+</div>
+
+<div class="black">
+**Nuestro cerebro evolucionó para buscar patrones.**  
+Por lo tanto, busca y muestra los patrónes que hayan en tus datos.  
+
+```{r, echo=FALSE, out.width = '100%' }
+knitr::include_graphics("Patrones.png")
+```
+
+</div>
+
+## 
+<div class="centered">
+<div class="black">
+
+**EVOLUCIÓN DE CASOS DE CORONAVIRUS EN 2 CIUDADES**  
+</div>
+</div>
+
+<div class="black">
+**Distingue algún patrón en la figura**  
+
+```{r, echo=FALSE, out.width = '100%' }
+knitr::include_graphics("Evolucion.png")
+```
+
+</div>
+
+## 
+<div class="centered">
+<div class="black">
+
+**MEMORIA DE CORTO PLAZO**
+
+</div>
+</div>
+
+<div class="black">
+**Nunca intente comunicar mucha información de forma simultánea.** 
+**Regla del $7 \pm 2$**  
+**Unidad básica de interación social.**  
+ 
+
+```{r, echo=FALSE, out.width = '100%' }
+knitr::include_graphics("Tabla.png")
+```
+
+</div>
+
+## 
+<div class="centered">
+<div class="black">
+
+**EXISTEN DISTINTAS FORMAS DE CREAR REPORTES**
+
+</div>
+</div>
+
+<div class="black">
+
+- **What You See Is What You Get**  
+Microsoft Word, Microsoft Power Point,formato de documento portátil (pdf)
+
+- **What You See Is What You Mean**.  
+Latex, Markdown, HTML, Rmarkdown
+
+
+```{r, echo=FALSE, out.width = '100%' }
+knitr::include_graphics("Rmarkdown.png")
+```
+
+</div>
+
+## 
+<div class="centered">
+<div class="black">
+
+**¿QUÉ ES R MARKDOWN?**
+
+</div>
+</div>
+
+<div class="black">
+
+Rmarkdown es un procesador de texto que permite la creación de reportes de alta calidad. 
+
+```{r, echo=FALSE, out.width = '100%' }
+knitr::include_graphics("Reportes.png")
+```
+
+</div>
+
+## 
+<div class="centered">
+<div class="black">
+
+**VENTAJAS DE USAR RMARKDOWN?**
+
+</div>
+</div>
+
+<div class="black">
+
+
+- Es un software libre y de código abierto, por lo que podemos usarlo sin necesidad de comprar una licencia.
+
+- Permite trabajar bajo el paradigma de la investigación reproducible (texto sin formato).
+
+- Cualquiera puede crear reportes, documentos, presentaciones y libros de alta calidad, con poco esfuerzo.
+
+- Uno de los mejores sistemas para crear reportes colaborativos y mejorar el rendimiento del trabajo de los analistas de datos. 
+
+</div>
+
+## 
+
+**¿CÓMO FUNCIONA R MARKDOWN?**
+
+</div>
+</div>
+
+<div class="centered">
+<div class="black">
+
+</div>
+</div>
+<div class="columns-1">
+```{r, echo=FALSE, out.width = '100%' }
+knitr::include_graphics("Rmarkdown1.png")
+```
+</div>
+
+## 
+
+**¿CÓMO FUNCIONA R MARKDOWN?**
+
+</div>
+</div>
+
+<div class="centered">
+<div class="black">
+
+</div>
+</div>
+<div class="columns-1">
+```{r, echo=FALSE, out.width = '100%' }
+knitr::include_graphics("Rmarkdown2.png")
+```
+</div>
+
+
+## 
+
+<div class="centered">
+<div class="black">
+
+**PRÁCTICA CON RMARKDOWN**
+
+</div>
+</div>
+
+<div class="black">
+**1).** **Guía de trabajo programación con Rmarkdown disponible en drive.**   
+Ingresa al siguiente link de la *[clase 02](https://drive.google.com/drive/folders/1m71xj_zuwMBMrX7vuOCx54FW8CA7kA3X?usp=sharing)*
+
+**2).** **La tarea se realiza en Rstudio.cloud**.   
+Ingresa al siguiente proyecto de *[Rstudio.Cloud](https://rstudio.cloud/spaces/175863/project/2974659)* 
+
+</div>
+
+
+## 
+
+<div class="centered">
+<div class="black">
+
+**RESUMEN DE LA CLASE**
+
+</div>
+</div>
+
+<div class="black">
+
+- Comunicar resultados de forma efectiva.
+
+- Ventajas de la elaborar reportes dinámicos con Rmarkdown.
+
+- Escribir un código de programación con Rmarkdown.
+
+- Elaborar diferentes reportes dinámicos.
+
+
+
+</div>
+

@@ -102,7 +102,7 @@ knitr::include_graphics("amonio.png")
 </div>
 
 <div class="black">
-**Lo que leemos una diapositiva tambien entrará por nuestra visión, pero luego será procesado en nuestro cerebro y se trasformará en imagenes por lo que no resulta del tofdo efectivo para comunicar una idea. Por lo tanto, hacer leer a tu audiencia será una forma poco eficiente de comunicar algo tan importante como los resultados de tus análisis, reportes o tesis. Para eso existen los reportes o informes escritos, donde tu audiencia podrá leer en profundidad la introducción, los métodos, los resultados y las conclusiones de tu trabajo. Por favor, evita copiar texto de los reportes para colocarlos en diapositivas.**
+**Lo que leemos en una diapositiva tambien entrará por nuestra visión, pero luego será procesado en nuestro cerebro y se trasformará en imagenes. Por esta razón no resulta del todo efectivo comunicar una idea enuna diapositiva con mucho texto escrito. De este modo, hacer leer a tu audiencia durante una exposición de resultados será una forma poco eficiente de comunicar algo tan importante como los resultados de tus análisis. Por favor, evita copiar mucho texto de los reportes, informes o tesis para colocarlos en diapositivas. Al contrario, expone solo las ideas principales como pequeñas fraces y afirmacione.**
 </div>
 
 ## 

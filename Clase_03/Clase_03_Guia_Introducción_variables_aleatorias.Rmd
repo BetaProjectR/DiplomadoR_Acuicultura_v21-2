@@ -198,7 +198,7 @@ Ejecute cada uno de los siguientes ejercicios en uno o más bloques de códigos 
 Cree un objeto llamado **dat** e importe el set de datos **shrimp** usando la función **_read_excel()_** de la librería **readxl**. Explore el set de datos usando las funciones **head()**, **tail**, **summary()** y **str()**.
 
 ```{r}
-dat <- read_excel("shrimp.xlsx")
+dat <- read_excel("shrimp.xlsx", sheet = 1)
 head(dat)
 tail(dat)
 summary(dat)
@@ -207,19 +207,19 @@ str(dat)
 
 ### **Ejercicio 5.** **Corrección de variables**
 
-Note que en el ejercicio anterior la variable **Weight** fue erradamente codificada como caracter o texto (chr) en vez de número. Use la función **as.numeric()** para corregir este error. Vuelva a ejecutar los comandos **summary()** y **str()** para comprobar que las variables están adecuadamente codificadas.
+Note que en el ejercicio anterior la variable **sex** fue codificada como caracter o texto (chr) en vez de factor. Use la función **as.factor(dat$sex)** para indicar que sexo es un factor de clasificación. Vuelva a ejecutar los comandos **summary()** y **str()** para comprobar que las variables están adecuadamente codificadas.
 
 ```{r}
-dat$Weight <- as.numeric(dat$Weight)
+dat$sex <- as.factor(dat$sex)
 summary(dat)
 str(dat)
 ```
 
 ### **Ejercicio 6.** **Observar el comportamiento de una variable**
 
-A partir del set de datos **shrimp** elabore un histograma y un boxplot de la variable cuantitativa continua **Weight**. Use las funciones **hist()**, **boxplot()**. 
+A partir del set de datos **shrimp** elabore un histograma y un boxplot de la variable cuantitativa continua **Weight**. Use las funciones **hist()**, **boxplot()**. Incluya títulos y leyenda de los ejes con los argumentos *col=""*, *main = ""* y *xlab=""*.
 
-Use este comando **par(mfrow=c(1,2))** para unir las gráficas en un solo panel con dos columnas.
+Investigue y se este comando **par(mfrow=c(1,2))** para unir las gráficas en un solo panel con dos columnas.
 
 Investigue que representa el círculo que aparece en el Boxplot.
 
@@ -235,7 +235,7 @@ boxplot(dat$Weight, col="light blue", main = "Boxplot Weight", ylab = "Weight (g
 
 ### **Ejercicio 7.** **Métricas del set de datos shrimp**
 
-Calcule las siguientes métricas del set de datos: promedio, desviación estándar, rango y cuantiles.
+Calcule las siguientes métricas del set de datos: promedio, desviación estándar, rango y cuantiles usando las funciones: **mean()**, **sd()**, **range()** y **quantle()**.
 
 ```{r}
 mean(dat$Weight)
@@ -248,14 +248,14 @@ quantile(dat$Weight)
 
 Usando la función **plot()** elabore:
 
-**a).** Gráfico con la densidad empírica. Debe incluir la función **density()** dentro de plot.
+**a).** Gráfico con la densidad empírica. Debe incluir la función **density()** dentro de la función **plot()**.
 
 ```{r}
 # Densidad empírica.
 plot(density(dat$Weight), main="Densidad empírica", xlab="Weight (g)")
 ```
 
-**b).** Gráfico con la distribución acumulada empírica. Debe incluir la función **ecdf()** dentro de plot.
+**b).** Gráfico con la distribución acumulada empírica. Debe incluir la función **ecdf()** dentro de la función **plot()**.
 
 ```{r}
 # Distribución acumulada empírica.
@@ -266,7 +266,7 @@ plot(ecdf(dat$Weight), main="Distribución acumulada empírica", xlab="Weight (g
 
 Utilice la función de distribución acumulada empírica **ecdf()** para determinar que proporción de camarones es menor a 20 g, y que proporción es mayor de 30 g:
 
-**a).** Primero cree una función de distribución acumulada empírica para los datos del peso de sus camarones.
+**a).** Primero cree un un objeto llamado **Fn** con la función de distribución acumulada empírica para los datos del peso de sus camarones.
 ```{r}
 Fn <- ecdf(dat$Weight)
 Fn
@@ -298,13 +298,13 @@ abline(v=19.958, col="blue", lwd=2)
 
 ¿Qué proporción de los datos está contenido entre una desviación estándar hacia arriba y hacia abajo de la media?.
 
-**a).** Calcule la proporción de datos 1 desviación estándar sobre la media.
+**a).** Calcule la proporción de datos 1 desviación estándar sobre la media usando la función creada en el ejercicio 9a.
 ```{r}
 p1 <- 1 - Fn(19.958 + 4.710923)
 p1
 ```
 
-**b).** Calcule la proporción de datos 1 desviación estándar bajo la media.
+**b).** Calcule la proporción de datos 1 desviación estándar bajo la media usando la función creada en el ejercicio 9a.
 ```{r}
 p2 <- Fn(19.958 - 4.710923)
 p2
@@ -328,13 +328,13 @@ Para la exportación de salmón se implementa un sistema de inspección visual d
 # Distribución Binomial
 ```
 
-**b).** Si en un proceso de inspección se detectó un total de 8 salmones defectuosos y 24 no defectuosos. ¿Cuál es la probabilidad de que los salmones sean defectuosos?.
+**b).** Si en un proceso de inspección se detectó un total de 8 salmones defectuosos y 24 no defectuosos. ¿Calcule cual es la probabilidad de que los salmones sean defectuosos?.
 
 ```{r}
 p <- 8 / 32
 ```
 
-**c).** ¿Cuál es la probabilidad de que no sean defectuosos?
+**c).** ¿Calcule la probabilidad de que no sean defectuosos?
 ```{r}
 q <- 1-p
 ```
@@ -366,7 +366,7 @@ P_PD <- p*p*p
 
 *Alexandrium catenella* es una microalga tóxica que produce el veneno paralizante de los mariscos (VPM). En Chile las intoxicaciones por VPM entre 1972-2002 generaron 456 enfermos y 30 fallecidos (total = 486). A partir de estos antecedentes responda.
 
-**a).** ¿Cuál es la letalidad por VPM en Chile?
+**a).** ¿Calcule la letalidad por VPM en Chile?
 
 ```{r}
 LT_VPM <-30 / 486
@@ -381,7 +381,7 @@ LT_VPM <-30 / 486
 
 **c).** Se ha reportado un intoxicación masiva de veneno paralizante de los mariscos en Calbuco que dió como resultado 80 personas intoxicadas. ¿Cuántas personas se recuperarán (0) y cuantas morirán (1) por esta intoxicación?. 
 
-Para responder primero cree un objeto denominado **rvpm** y simule el resultado de la intoxicación usando **rbinom()**. Use **print()** para observar sus datos simulados.
+Para responder primero cree un objeto denominado **rvpm** y simule el resultado de la intoxicación usando la función **rbinom()**. Use **print()** para observar sus datos simulados.
 
 ```{r}
 set.seed(123)
@@ -392,12 +392,15 @@ rvpm<-rbinom(n, size=1, prob=0.0617)
 print(rvpm)
 ```
 
-**d).** Represente en una tabla la frecuencia esperada de recuperados y fallecidos
+**d).** Usando la función **table()** represente la frecuencia esperada de recuperados y fallecidos.
 ```{r}
 table(rvpm)
+```
+
+Con la tabla anterior elabore una tabla para ser incluida en un reporte con la función **knitr::kable()**. incluya la leyenda de la tabla con el argumento *caption=""*.
+```{r}
 
 #Tabla con formato para reporte
-
 knitr::kable(
   table(rvpm),
   row.names = TRUE

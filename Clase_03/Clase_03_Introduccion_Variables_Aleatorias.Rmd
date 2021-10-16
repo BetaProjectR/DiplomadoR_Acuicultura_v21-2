@@ -16,6 +16,7 @@ library("knitr")
 library(Rlab)
 ```
 
+
 ## **PLAN DE LA CLASE**
 
 **1.- Introducción**
@@ -68,7 +69,6 @@ hist(q1, col="red", main = "Histograma n= 10000", xlab = "Variable cuantitativa 
 Podemos predecir la probabilidad de que la variable aleatoria tome un determinado valor usando la función de densidad empírica **density()**.
 
 ```{r , echo=FALSE, out.width = '80%', fig.align='center'}
-
 q2<-rnorm(100000, 0, 1)
 plot(density(q2), main = "Función de densidad empírica")
 
@@ -98,17 +98,18 @@ knitr::include_graphics("Boxplot.png")
 
 Las variables aleatorias discretas son aquellas que presentan un número contable de valores; por ejemplo:
 
-* **Número de salmones que están en un estanque** (10, 50, 70, etc.).
+* **Color del salmón**: Escala salmofan 20-34.
 
-* **Número de parásitos presentes en tilapias** (1, 3, 5, 6, etc.).
+* **Número de parásitos** (1, 3, 5, 6, etc.).
 
-* **Número de días a la muerte durante el desafío** (1, 2, 3,..., 40).
+* **Número de días a la muerte durante desafío contra patógenos** (1, 2, 3,..., 40).
+
 
 ## **IMPORTANCIA DE IDENTIFICAR Y ANALIZAR VARIABLES ALEATORIAS DISCRETAS**
 
-* En gran parte, la **_distribución de variables aleatorias discretas_** puede ser **asimétrica a derecha o a izquierda**.
+* En gran parte, la **_distribución de variables aleatorias discretas_** suelen ser **asimétricas a derecha o a izquierda**.
 
-* Cuando las variables en estudio son conteos, proporciones o variables binarias (0 y 1); deben ser tratadas como **variables aleatorias discretas**. 
+* Usualmente las variables en estudio son conteos, proporciones o variables binarias (0 y 1); deben ser tratadas como **variables aleatorias discretas**. 
 
 * Según sea la variable aleatoria discreta, tendrá una función de distribución de probabilidad asociada **(Bernoulli, Binomial, Binomial Negativa, Poisson, entre otras)**. 
 
@@ -126,7 +127,7 @@ Las variables aleatorias discretas son aquellas que presentan un número contabl
   
 Algunas de estas variables se conocen como **series de tiempo** y en términos estrictos son más bien una *sucesión de variables aleatorias* a través del tiempo.
 
-## **EJEMPLO VARIABLE ALEATORIA CON DISTRIBUCIÓN BERNOULLI**
+## **EJEMPLO VARIABLE ALEATORIA BINARIA - DISTRIBUCIÓN BERNOULLI**
 
 Se saca un camarón al azar de una piscina, la probabilidad de que tenga sindrome de la mancha blanca es de 0.35. Sea X=1 si el camarón tiene sindrome de la mancha blanca y X=0 en el caso de que no tenga sindrome de la mancha blanca. ¿Cuál es la distribución de X?
 
@@ -141,17 +142,40 @@ Se saca un camarón al azar de una piscina, la probabilidad de que tenga sindrom
 knitr::include_graphics("fbernoulli.png")
 ```
 
-## **EJEMPLO VARIABLE ALEATORIA CON DISTRIBUCIÓN BINOMIAL**
+## **EJEMPLO VARIABLE ALEATORIA DISCRETA - DISTRIBUCIÓN BINOMIAL**
 
-```{r, echo=FALSE, out.width = '80%', fig.align='center', fig.cap="Némero de parçasitos por pez"}
+```{r, echo=FALSE, out.width = '80%', fig.align='center', fig.cap="Número de parásitos por pez"}
 knitr::include_graphics("Binomial_salm.png")
 ```
 
-## **COMO IMPORTAR TUS DATOS A R**
+## **FORMATO CORRECTO PARA IMPORTAR A R**
+```{r, echo=FALSE, out.width = '55%', fig.align='center', fig.cap="Formato correcto de archivo excel para que sea importado a R"}
+knitr::include_graphics("Excel_ok.png")
+```
 
-## **FORMATO CORRECTO DE DATOS EXCEL ANTES DE IMPORTAR**
+## **ERRORES EN FORMATO EXCEL**
+```{r, echo=FALSE, out.width = '80%', fig.align='center', fig.cap="Errores comunes antes de importar a excel"}
+knitr::include_graphics("Errores_1.png")
+```
 
-## **ERRORES EN EL FORMATO EXCEL**
+**Importante:** No colocar símbolos matemáticos por ejemplo (%,$,+) como nombres de las **(variables)**.
+
+## **ERRORES EN FORMATO EXCEL 2**
+```{r, echo=FALSE, out.width = '80%', fig.align='center', fig.cap="Errores comunes antes de importar a excel"}
+knitr::include_graphics("Errores.png")
+```
+
+**Importante:** No colocar comentarios en las celdas de datos. Dejar celdas vacias o usar el simbolo *NA* es preferido cuando hay datos faltantes.
+
+## **COMO IMPORTAR DATOS EXCEL A R**
+
+Antes de importar un archivo en formato excel (**.xlsx o .xls**) debe instalar y tener habilitada la librería **readxl**
+
+```{r, echo=TRUE, out.width = '100%', fig.align='center'}
+library(readxl)
+dat <- read_excel("shrimp.xlsx", sheet = 1)
+dat <- read_excel("shrimp.xlsx", sheet = "shrimp")
+```
 
 ## **PRÁCTICA ANÁLISIS DE DATOS**
 
@@ -166,7 +190,7 @@ knitr::include_graphics("Binomial_salm.png")
 
 - Observamos una variable cuantitativa continua usando histogramas y boxplot.
 
-- Predecimos el comportamiento de una variable cuantitativa continua usando funciones de densidad y de distribución acumulada.
+- Predecimos el comportamiento de una variable cuantitativa continua con distribución normal usando funciones de densidad y de distribución acumulada.
 
-- Estudiamos sobre variables aleatorias discretas y algunas distribuciones de probabilidad asociadas (Bernoulli o Binomial).
+- Estudiamos sobre variables aleatorias discretas y algunas distribuciones de probabilidad asociadas (Bernoulli y Binomial).
 

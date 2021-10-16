@@ -1,0 +1,162 @@
+---
+title: "Clase 06 Manipulación de datos con dplyr"
+author: Dr. José A. Gallardo  |  <jose.gallardo@pucv.cl>  |  Pontificia Universidad
+  Católica de Valparaíso
+date: "`r format(Sys.time(), '%d %B %Y')`"
+output:
+  beamer_presentation:
+      includes:
+        in_header: mystyle.tex
+subtitle: 'Diplomado en Análisis de datos con R para la Acuicultura'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(dplyr)
+library(readxl)
+```
+
+# PLAN DE LA CLASE
+
+## **1.- Introducción**
+    
+- ¿Para qué manipular datos?
+- Librería dplyr: Tuberías.
+- Librería dplyr: Comandos clave.
+
+## **2). Práctica con R y Rstudio cloud.**
+
+- Realizar manipulación de datos con dplyr.
+- Realizar gráficas avanzadas con ggplot2.
+- Elaborar un reporte dinámico en formato pdf con Rmarkdown.
+
+# MANIPULACIÓN DE DATOS
+
+## **¿Para qué manipular datos?**
+- Para dar el formato adecuado a nuestro set de datos previo al análisis estadístico.
+- Para hacerlos más legibles y organizados.
+- Etapa clave para una correcta visualización de datos. 
+
+### Ejemplos de tareas comunes durante esta etapa:
+
+* Filtrar datos por categorías.
+
+* Remover datos o imputar datos faltantes.
+
+* Agrupar datos por algún criterio.
+
+* Seleccionar y resumir variables.
+
+* Generar variables derivadas a partir de varibles existentes. 
+
+# LIBRERÍA DPLYR: FUNCIONES CLAVE
+
+La librería **dplyr** posee varias funciones que permiten manipular data.frames de forma ágil e intuitiva.
+
+## **Funciones claves**:
+
+**select()**: Permite extraer o seleccionar variables/columnas específicas de un data.frame.
+
+**mutate()**: Permite calcular nuevas variables "derivadas". Util para calcular proporciones, tasas.
+
+**filter()**: Para filtrar desde una tabla de datos un subconjunto de filas. Ej. solo un nivel de de un factor, observaciones que cumplen algún criterio (ej. > 20).
+
+**group_by()**: Permite agrupar filas con base a los niveles de alguna variable o factor.
+
+# LIBRERÍA DPLYR: EL OPERADOR PIPE (TUBERIA).
+
+**dplyr** usa el operador pipe **%>%** como una tubería para enlazar un data.frame con una o más funciones.
+```{r, echo=TRUE}
+x <- rnorm(5)
+y <- rnorm(5)
+dat <- data.frame(x,y)
+dat %>% max
+```
+
+```{r, echo=TRUE}
+dat %>% arrange(y)
+```
+
+
+# ESTUDIO DE CASO: MUESTREO DE PECES
+
+**Objeto: peces**
+
+| Pez | Especie | Sexo | Peso |  Parásitos |
+|:---:|:---:|:----:|:-----|:---:|
+| 1  | A   | Hembra | 174    |  0 |
+| 2  | A   | Hembra | 155    | 2 |
+| 3  | A   | Hembra | 131    |  25 |
+| 4  | B   | Macho | 163    |  8 |
+| 5  | B   | Macho | 103    | 33  |
+| 6  | B   | Hembra | 138    |  15 |
+| 7 | C   | Hembra | 135    | 5  |
+| 8  | C   | Macho | 138    | 20  |
+| 9 | C   | Hembra | 135    | 45  |
+
+
+# FUNCIÓN SELECT()
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+peces <- read_excel("Peces.xlsx")
+```
+
+```{r, echo=TRUE}
+select(peces, Especie, Sexo)
+```
+
+# FUNCIÓN SELECT() CON PIPE
+
+```{r, echo=TRUE}
+peces %>% select(Especie, Sexo)
+```
+
+# FUNCIÓN FILTER() CON PIPE
+
+```{r, echo=TRUE}
+peces %>% filter(Sexo == "Macho")
+```
+
+# MÚLTIPLES FUNCIONES Y TUBERÍAS
+
+```{r, echo=TRUE}
+peces %>% select(Especie, Sexo, Peso) %>% 
+  filter(Sexo == "Macho")
+```
+# FUNCIÓN SUMMARIZE()
+
+```{r, echo=TRUE}
+peces %>% select(Especie, Sexo, Peso, Parasitos) %>% 
+summarize(Minimo_Peso = min(Peso), 
+          Minimo_Parasitos = min(Parasitos))
+```
+# FUNCIÓN SUMMARIZE() + GROUP_BY()
+
+```{r, echo=TRUE}
+peces %>% group_by(Especie) %>% 
+summarize(n = n(), 
+          Minimo_Peso = max(Peso),
+          Promedio_peso= mean(Peso))
+```
+
+# FUNCIÓN MUTATE()
+
+```{r, echo=TRUE}
+peces %>% select(Especie, Peso, Parasitos) %>% 
+  mutate(Densidad_parasitos = Parasitos/Peso)
+```
+
+# PRÁCTICA ANÁLISIS DE DATOS
+1.- Guía de trabajo Rmarkdown disponible en drive.  
+**Clase 06**
+
+2.- La tarea se realiza en Rstudio.cloud.
+**Clase 06 - Manipular datos con dplyr**
+
+# RESUMEN DE LA CLASE
+
+- Manipulamos datos con dplyr.
+
+- Aplicamos tuberías con pipe **%>%**.
+
+- Comunicamos un análisis exploratorio de datos de forma efectiva.

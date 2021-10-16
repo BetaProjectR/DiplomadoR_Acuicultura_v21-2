@@ -21,7 +21,7 @@ Investigador post-doctoral de la Pontificia Universidad Católica de Valparaíso
 
 **UNIDAD 1. INVESTIGACIÓN REPRODUCIBLE Y ANÁLISIS EXPLORATORIO DE DATOS**
 
-Subtópico 1.1.- Investigación reproducible.  
+Subtópico 1.1.- Investigación reproducible  con R, Rstudio, Rmarkdwon y GitHub.
 Subtópico 1.2.- Variables aleatorias y distribuciones de probabilidad.  
 Subtópico 1.3.- Análisis exploratorio de datos.  
 
@@ -30,7 +30,7 @@ Subtópico 1.3.- Análisis exploratorio de datos.
 Subtópico 2.1.- Pruebas de contraste de hipótesis paramétrica.  
 Subtópico 2.2.- Pruebas de contraste de hipótesis no paramétrica.   
 
-**UNIDAD 3. MODELOS LINEALES Y NO LINEALES**
+**UNIDAD 3. MODELOS LINEALES Y ANÁLISIS MULTUVARIANTE**
 
 Subtópico 3.1.- Modelos lineales.  
 Subtópico 3.2.- Modelos lineales generalizados.  

@@ -1,0 +1,288 @@
+---
+title: "Clase 16 Regresión lineal múltiple."
+author: Dr. José A. Gallardo y Dra. María Angélica Rueda.  <jose.gallardo@pucv.cl>  |  Pontificia Universidad
+  Católica de Valparaíso
+date: "`r format(Sys.time(), '%d %B %Y')`"
+output:
+  beamer_presentation: default
+  ioslides_presentation:
+    fig_caption: yes
+    fig_height: 6
+    fig_width: 7
+    latex_engine: xelatex
+    pdf_document: null
+    template: quarterly_report.html
+  slidy_presentation: default
+subtitle: Diplomado en Análisis de datos con R para la acuicultura.
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(readxl)
+library(dplyr)
+library(ggplot2)
+library(ggpmisc)
+library(knitr)
+library(car)
+library(lmtest)
+library(psych)
+```
+
+# PLAN DE LA CLASE
+
+**1.- Introducción**
+    
+- Modelo de regresión lineal múltiple
+- El problema de la multicolinealidad
+- ¿Cómo seleccionar variables?
+- ¿Cómo comparar modelos?
+- Interpretación regresión lineal múltiple con R.
+
+**2.- Práctica con R y Rstudio cloud.** 
+
+- Realizar análisis de regresión lineal múltiple.  
+- Realizar gráficas avanzadas con ggplot2.  
+- Elaborar un reporte dinámico en formato pdf.  
+  
+
+# REGRESIÓN LINEAL MÚLTIPLE
+
+Sea $Y$ una variable respuesta continua y $X_1,…,X_p$ variables predictoras, un modelo de regresión lineal múltiple se puede representar como,
+ 
+$$Y_{i} = \beta_{0} + \beta_{1} X_{i1} + \beta_{2} X_{i2} + ... + \beta_{p} X_{ip} + \epsilon_{i}$$
+
+$\beta_{0}$ = Intercepto.
+$\beta_{1} X_{i1}, \beta_{2} X_{i2}, \beta_{p} X_{ip}$ = Coeficientes de regresión estandarizados.
+
+Si p = 1, el modelo es una regresión lineal simple.  
+Si p > 1, el modelo es una regresión lineal múltiple.  
+Si p > 1 y alguna variable predictora es Categórica, el modelo se denomina ANCOVA.   
+
+# ESTUDIO DE CASO DIETAS MITILIDOS
+
+Dieta microencapsulada en mitilidos.  
+[Fuente: Willer and Aldridge 2017](https://royalsocietypublishing.org/doi/10.1098/rsos.171142)
+
+```{r, message=FALSE, out.width = '80%', fig.align='center'}
+clearance <-  read_excel("ParticleClearance.xlsx", sheet = 1)
+
+# Create data filters
+mussel <- filter(clearance, sample == "mussel")
+control <- filter(clearance, sample == "control")
+```
+
+
+|time| sample | replicate | particle concentration |
+|---|---|---|---|
+| 0 |	mussel |	a	| 400 |	
+| 5	| mussel	| a	| 320	| 
+|  10	| mussel	| a	| 280	| 
+|  ...	| ...	| ...	| ...	| 
+|  0	| control	| a	| 160	| 
+|  5	| Control	| a	| 120	| 
+|  10	| Control	| a	| 120	| 
+
+# TASA DE ACLARACIÓN MUSSEL.
+
+Problemas: La concentración es discreta y la relación es no lineal.
+Tips: stat_smooth(method='loess',formula=y~x, se=T)
+
+```{r, out.width = '75%', message=FALSE, fig.align='center'}
+My_Theme = theme(
+  axis.title.x = element_text(size = 20),
+  axis.text.x = element_text(size = 20),
+  axis.title.y = element_text(size = 20),
+  axis.text.y = element_text(size = 20))
+
+microplot <- ggplot(data = mussel, aes(x = time, y = microparticle_concentration)) +
+  geom_point(position = position_jitter(w = 0, h = 0.1) ) +
+  labs(x = "Time (minutes)", y = expression(Concentration~microparticles~ml^-1)) +
+  scale_shape_manual(values=c(1,2)) +
+  stat_smooth(method='loess',formula=y~x, se=T)+
+  scale_color_brewer(palette="Set1") + 
+  theme(legend.position="none") +
+  theme(panel.border=element_blank(), axis.line=element_line())
+microplot+My_Theme
+```
+
+
+# EVALUACION SUPUESTOS.
+
+
+```{r, echo=TRUE, out.width = '75%', message=FALSE, fig.align='center'}
+reg_mussel <- lm(microparticle_concentration ~ time, 
+                 data=mussel)
+plot(reg_mussel, which = 1)
+```
+
+# REGRESIÓN LINEAL SOBRE LOG10(TASA ACLARACIÓN)
+
+```{r}
+# Create regression lines
+reg_mussel <- lm(log_microparticle_concentration ~ time, data=mussel)
+reg_control <- lm(log_microparticle_concentration ~ time, data=control)
+```
+
+Tips: stat_smooth(method='lm',formula=y~x, se=F) 
+```{r}
+## Microparticle concentration vs time
+# Plotting microparticle concentration vs time
+
+microplot <- ggplot(data = clearance, aes(x = time, y = log_microparticle_concentration, color = sample, shape = sample)) +
+  geom_point(position = position_jitter(w = 0, h = 0.1) ) +
+  labs(x = "Time (minutes)", y = expression(log[10]~(Concentration~microparticles~ml^-1))) +
+  stat_smooth(method='lm',formula=y~x, se=F) +
+  scale_shape_manual(values=c(1,2)) +
+  scale_color_brewer(palette="Set1") + 
+  theme(legend.position= c(0.2, 0.2)) +
+  theme(panel.border=element_blank(), axis.line=element_line())
+microplot+My_Theme
+```
+
+# PRUEBAS DE HIPÓTESIS REGRESIÓN LINEAL MÚLTIPLE
+
+- **Intercepto.**  
+Igual que en regresión lineal simple.  
+- **Modelo completo.**  
+Igual que en regresión lineal simple.  
+- **Coeficientes.**  
+Uno para cada variable y para cada factor de una variable de clasificación.  
+
+# REGRESIÓN LINEAL MULTIPLE
+
+```{r, , echo=TRUE}
+lm.full <- lm(log_microparticle_concentration 
+              ~ time*sample + time + sample, 
+              data = clearance)
+
+summary(lm.full)$coef %>% kable()
+```
+
+$R^2$ = `r  round(summary(lm.full)$r.squared,2)`, *p-val* = `r anova(lm.full)$'Pr(>F)'[1]`
+
+# ANCOVA
+
+```{r, echo=TRUE}
+anova(lm.full) %>% kable()
+
+```
+
+# REGRESIÓN LINEAL SIMPLE: MUSSEL
+
+```{r, echo=TRUE}
+reg_mussel <- lm(log_microparticle_concentration 
+                 ~ time, data=mussel)
+summary(reg_mussel)$coef %>% kable()
+```
+
+$R^2$ = `r  round(summary(reg_mussel)$r.squared,2)`, *p-val* = `r anova(reg_mussel)$'Pr(>F)'[1]` 
+
+# REGRESIÓN LINEAL SIMPLE: CONTROL
+
+```{r, echo=TRUE}
+reg_control <- lm(log_microparticle_concentration 
+                  ~ time, data=control)
+summary(reg_control)$coef %>% kable()
+
+```
+
+$R^2$ = `r  round(summary(reg_control)$r.squared,2)`, *p-val* = `r anova(reg_control)$'Pr(>F)'[1]` 
+
+# PROBLEMAS CON LOS ANÁLISIS DE REGRESIÓN LINEAL MÚLTIPLE
+
+Para *p* variables predictoras existen *N* modelos diferentes que pueden usarse para estimar, modelar o predecir la variable respuesta.
+
+**Problemas**  
+- ¿Qué hacer si las variables predictoras están correlacionadas?.  
+- ¿Cómo seleccionar variables para incluir en el modelo?.  
+- ¿Qué hacemos con las variables que no tienen efecto sobre la variable respuesta?.  
+- Dado N modelos ¿Cómo compararlos?, ¿Cuál es mejor?.  
+
+# DATOS SIMULADOS PARA REG. LINEAL MÚLTIPLE
+
+100 datos simulados de 3 variables cuantitativas continuas.
+
+```{r}
+set.seed(50)
+X1=rnorm(100,0,1)
+X2=rnorm(100,0,1)+(3.1*X1)
+Y= 2 + 0.5 * X1 + 0.1 * X2 + rnorm(100,0,0.4)
+lm1<- lm(Y~X1+X2)
+lm2<- lm(Y~X1)
+sim_dat<-cbind(Y,X1,X2)
+head(sim_dat) %>% kable(digits=2)
+```
+
+# MULTICOLINEALIDAD
+
+Correlaciones >0,80 es problema. 
+```{r, ut.width = '75%', message=FALSE, fig.align='center'}
+pairs.panels(sim_dat)
+```
+# FACTOR DE INFLACIÓN DE LA VARIANZA (VIF).
+
+- **VIF ** es una medida del grado en que la varianza del estimador de mínimos cuadrados incrementa por la colinealidad entre las variables predictoras.
+- mayor a 10 es evidencia de alta multicolinealidad
+
+```{r, echo=TRUE}
+lm1<- lm(Y~X1+X2)
+vif(lm1) %>% 
+  kable(digits=2, col.names = c("VIF"))
+
+```
+
+# ¿CÓMO RESOLVEMOS MULTICOLINEALIDAD?
+
+- Eliminar variables correlacionadas, pero podríamos eliminar una variable causal.
+
+- Transformar una de las variables: log u otra.
+
+- Reemplazar por variables ortogonales: Una solución simple y elegante son los componentes principales (ACP).
+
+# COMPARACIÓN DE MODELOS: MODELO COMPLETO
+
+```{r, echo=TRUE}
+lm1<- lm(Y~X1+X2)
+
+summary(lm1)$coef %>% kable()
+```
+
+$R^2$ = `r  round(summary(lm1)$r.squared,2)`, *p-val* = `r anova(lm1)$'Pr(>F)'[1]`
+
+# COMPARACIÓN DE MODELOS: MODELO REDUCIDO
+
+```{r, echo=TRUE}
+lm<- lm(Y~X1)
+
+summary(lm)$coef %>% kable()
+```
+
+$R^2$ = `r  round(summary(lm)$r.squared,2)`, *p-val* = `r anova(lm)$'Pr(>F)'[1]`
+
+# COMPARACIÓN DE MODELOS
+
+```{r, echo=TRUE}
+# analisis de residuales
+anova(lm1, lm2) %>% kable()
+# Criterio AIC - penaliza el número de variables
+AIC(lm1, lm2) %>% kable()
+```
+
+# PRÁCTICA ANÁLISIS DE DATOS
+- Guía de trabajo práctico disponible en drive y Rstudio.cloud.  
+**Clase_15**
+
+- El trabajo práctico se realiza en Rstudio.cloud.  
+**Guía 15 Regresión lineal**
+
+# RESUMEN DE LA CLASE
+
+- **Elaborar hipótesis para una regresión lineal múltiple**
+
+- **Realizar análisis de covarianza**
+
+- **Interpretar coeficientes**
+
+- **Evaluar supuestos: multicolinealidad**
+
+- **Comparar modelos**

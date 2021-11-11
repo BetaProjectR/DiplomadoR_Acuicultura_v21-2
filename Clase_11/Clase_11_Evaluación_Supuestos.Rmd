@@ -1,0 +1,222 @@
+---
+title: "Clase 11 Evaluación de supuestos pruebas paramétricas"
+author: Dr. José A. Gallardo y Dra. María Angélica Rueda.  <jose.gallardo@pucv.cl>  |  Pontificia Universidad
+  Católica de Valparaíso
+date: "`r format(Sys.time(), '%d %B %Y')`"
+output:
+  beamer_presentation: default
+  ioslides_presentation:
+    fig_caption: yes
+    fig_height: 6
+    fig_width: 7
+    latex_engine: xelatex
+    pdf_document: null
+    template: quarterly_report.html
+  slidy_presentation: default
+subtitle: Diplomado en Análisis de datos con R para la acuicultura.
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(car)
+library(lmtest)
+library(dplyr)
+library(knitr)
+```
+
+## PLAN DE LA CLASE
+**1.- Introducción**
+    
+- Supuestos de los análisis paramétricos.   
+- Consecuencias de la violación de los supuestos.
+- Métodos gráficos y análisis de residuos para evaluar supuestos.
+- Pruebas de hipótesis para evaluar supuestos.
+
+**2.- Práctica con R y Rstudio cloud**
+
+- Evaluar supuestos de las pruebas paramétricas.
+- Elaborar un reporte dinámico en formato pdf.  
+
+## SUPUESTOS: INDEPENDENCIA
+
+**Independencia**  
+Cada observación de la muestra no debe estar relacionada con otra observación de la muestra.
+
+*Si se viola este supuesto la prueba paramétrica* **_NO_** *es válida.*
+
+**Ejemplo violación del supuesto**  
+- Muestreo de peces de una misma familia.   
+- Diversidad de especies en una misma muestra de plancton.  
+- Medidas repetidas en un mismo individuo (antes y después de un tratamiento).  
+
+## SUPUESTOS: HOMOGENEIDAD DE VARIANZAS
+
+**Homocedasticidad**  
+En el caso de comparación de dos o más muestras éstas deben provenir de poblaciones con la misma varianza.
+```{r, echo=FALSE, out.width = '100%' }
+knitr::include_graphics("anova.png")
+```
+
+*Alguna heterogeneidad es permitida, particularmente con* **_n > 30_**.
+
+## SUPUESTOS: NORMALIDAD
+
+**Normalidad**  
+Los datos de muestreo se obtienen de una población que tiene distribución normal.   
+
+**Ejemplos de violación del supuesto**   
+- La distribución no es simétrica.  
+- La variable no es continua.  
+- Tiene _límites_ a la izquierda o derecha como los porcentajes.
+
+```{r, echo=FALSE, out.width = '60%', fig.align='center'}
+curve(dnorm,-4,4, ylab = "density")
+#rnorm
+par(xpd=T)
+points(rnorm(100),jitter(rep(0,100)),pch=16,cex=.6,col='seagreen')
+par(xpd=F)
+mtext(side=3,line=.3,'X ~ Normal(0,1)',cex=.9,font=2)
+```
+
+## VIOLACIÓN DEL SUPUESTO DE NORMALIDAD
+
+**¿Cuál es el problema?**  
+Cambia la probabilidad de rechazar la hipótesis nula.
+
+```{r, echo=FALSE, out.width = '110%' }
+knitr::include_graphics("no_normal.png")
+```
+
+## VIOLACIÓN DEL SUPUESTO DE NORMALIDAD 2
+
+**¿Cómo afecta una población no normal a la probabilidad de rechazar?**
+
+|  **n** | Cola izq.| Cola der.| $\alpha_{Empírica}$  |
+|:-------------|:------------------|:------------------|:------------------|
+| **5** | 0,20 | 0,26 | 0,46 |
+| **10** | 0,24 | 0,28 | 0,52 |
+| **20** | 0,23 | 0,26 | 0,49 |
+| **30** | 0,24 | 0,27 | 0,51 |
+| **50** | 0,24 | 0,26 | 0,50 |
+| **100** | 0,24 | 0,26 | 0,50 |
+
+*En la práctica apróximadamente normal es suficiente, particularmente con* **_n > 30_**.
+
+## ANÁLISIS DE RESIDUALES
+
+**¿Qué son los residuos?**  
+Residuo = valor observado - valor predicho  
+e = y - $\hat{y}$ 
+
+**Residuos en ANOVA**
+$$\sum_{i=1}^{n} (y - \hat{y})^2$$
+*Note que la suma de residuos representa la variabilidad no explicada por el modelo.*
+
+**¿Para qué sirven?**  
+Para someter a prueba los supuestos de muchos análisis paramétricos como **ANOVA**, **ANCOVA** o **REGRESIÓN**. 
+
+## EVALUACIÓN DE SUPUESTOS
+
+**Regla de oro**  
+Primero evalúe independencia, luego homogeneidad de varianzas y finalmente normalidad.  
+
+**Estudio de caso**  
+```{r, fig.height=6 }
+my_data <- ToothGrowth
+names(my_data) <- c("Peso", "Tratamiento")
+my_data$Tratamiento <- factor(my_data$Tratamiento, 
+                             labels = c("Dieta 1", "Control"))
+
+boxplot(Peso ~ Tratamiento, data = my_data)
+```
+
+## ANOVA EN LA FORMA DE MODELO LINEAL
+
+```{r, echo=TRUE}
+lm.aov <- lm(Peso ~ Tratamiento, data = my_data)
+anova(lm.aov) %>% kable(digits = 3)
+```
+
+## INDEPENDENCIA: ANÁLISIS DE RESIDUALES
+
+```{r, echo=TRUE}
+plot(lm.aov$residuals, pch=20, col = "blue",
+     cex.lab=1.25, cex.axis=1.25)
+```
+
+## INDEPENDENCIA: PRUEBA DE DURBIN-WATSON
+
+**Hipótesis**  
+**H~0~**: Son independientes o no existe autocorrelación.   
+**H~A~**: No son independientes y existe autocorrelación.  
+
+```{r, echo=TRUE}
+dwtest(Peso ~ Tratamiento, data = my_data,
+       alternative = c("two.sided"), 
+       iterations = 15) # library(lmtest)
+
+```
+
+## HOMOGENEIDAD DE VARIANZAS: ANÁLISIS DE RESIDUALES
+
+```{r, echo=TRUE,out.width = '85%', fig.align='center'}
+plot(lm.aov, 1, pch=20, col = "blue",
+     cex.lab=1.5, cex.axis=1.5, sub = "")
+```
+
+
+## HOMOGENEIDAD DE VARIANZAS: PRUEBA DE LEVENE
+
+**H~0~**:  $\sigma^2_1$ = $\sigma^2_2$  
+**H~A~**: $\sigma^2_1$ $\neq$ $\sigma^2_2$  
+
+```{r, echo=TRUE}
+lv <- leveneTest(Peso ~ Tratamiento, data = my_data,
+           center = "median") # library(car)  
+lv %>% kable(digits = 3)
+```
+
+## NORMALIDAD: GRÁFICO DE CUANTILES
+
+
+```{r, echo=TRUE}
+qqPlot(lm.aov) # library(car)
+```
+
+
+## NORMALIDAD: ANÁLISIS DE RESIDUALES
+
+```{r, echo=TRUE}
+plot(lm.aov, 2, pch=20, col = "blue")
+```
+
+## NORMALIDAD: PRUEBA DE SHAPIRO-WILKS
+
+**H~0~**: La distribución es normal.     
+**H~A~**: La distribución no es normal.    
+
+```{r, echo=TRUE}
+aov_residuals <- residuals(object = lm.aov)
+shapiro.test(x= aov_residuals)
+
+```
+
+## PRÁCTICA ANÁLISIS DE DATOS
+- Guía de trabajo práctico disponible en drive y Rstudio.cloud.  
+**Clase_11**
+
+- El trabajo práctico se realiza en Rstudio.cloud.  
+**Clase 11 - Evaluación de supuestos**
+
+## RESUMEN DE LA CLASE
+
+- **Teoría**
+- Supuestos de los análisis paramétricos.   
+- Consecuencias de la violación de los supuestos.
+- Interpretación de métodos gráficos, análisis de residuos y pruebas de hipótesis para evaluar supuestos.
+
+- **Evaluación de supuestos**
+    * Independencia.  
+    * Homocedasticidad.
+    * Normalidad.
+    
